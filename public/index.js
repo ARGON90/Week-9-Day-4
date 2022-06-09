@@ -24,12 +24,14 @@ const catLoader = async () => {
     const catRes = await fetch('https://api.thecatapi.com/v1/images/search');
     // formatting response object to standard object to be used
     const cats = await catRes.json();
+    const storedUrl = localStorage.getItem("catImg")
+    console.log(storedUrl)
 
     // creation of img tag to hold cat image fetches
     const newCatImg = document.createElement('img');
     // setting the src attribute of the img tag to the fetched
     // cat image url
-    newCatImg.setAttribute('src', `${cats[0].url}`);
+    newCatImg.setAttribute('src', `${storedUrl}`);
     // styling for cat img element
     newCatImg.style.maxHeight = '500px';
     newCatImg.style.maxWidth = '500px';
@@ -37,7 +39,9 @@ const catLoader = async () => {
     // appending cat img element to the mainContainer div
     mainContainer.appendChild(newCatImg);
 
-    const imgCat = localStorage.setItem("catImg",`${cats[0].url}`)
+
+    const imgCat = localStorage.getItem("catImg")
+
     // Phase 2
     // creation of new cat img button
     const catButton = document.createElement('button');
@@ -46,15 +50,29 @@ const catLoader = async () => {
     mainContainer.appendChild(catButton);
 
     // creation of vote counter
-    let count = 0;
+
     const voteDiv = document.createElement('div');
+
+    let count = 0;
+
+    let storedVote = localStorage.getItem("voteValue")
+
+
+
     voteDiv.innerText = `Popularity Score: ${count}`;
     voteDiv.style.margin = '10px';
     mainContainer.appendChild(voteDiv);
     const voteValue = localStorage.setItem("voteValue",`${count}`)
 
+    if (storedVote) {
+    console.log(storedVote)
+    voteDiv.innerText = `Popularity Score: ${storedVote}`
+    console.log(voteDiv.innerText)
+    }
     // creation of comments display
     const commentDisplay = document.createElement('div');
+
+
 
     // event listener for new cat button
     catButton.addEventListener('click', async (e) => {
@@ -129,7 +147,10 @@ const catLoader = async () => {
     commentContainerDiv.appendChild(submitButton);
 
     mainContainer.appendChild(commentContainerDiv);
-    const commentValue = localStorage.setItem("commentValue", "blank")
+    const input = document.querySelector("input").value;
+    console.log("input", input)
+
+
     // comment display styling
     commentDisplay.style.border = '1px solid black';
     commentDisplay.style.height = '500px';
@@ -140,25 +161,49 @@ const catLoader = async () => {
     commentDisplay.style.margin = '10px';
     mainContainer.appendChild(commentDisplay);
 
+
+
     // event listener to catch submit of comments
     submitButton.addEventListener('click', (e) => {
+
         // creation of new comment
+        
         const newComment = document.createElement('span');
         // updating new comment section with value of the input
         newComment.innerText = commentInput.value;
         commentDisplay.appendChild(newComment);
         // reset of the comment input
         const commentValue = localStorage.getItem("commentValue")
-        if(commentValue){
+
+
+        if(commentValue.length == 0){
+            console.log("inside comment value length statement")
+
             localStorage.setItem("commentValue", `${commentInput.value}`)
         }
 
+
+        if (storedComment) {
+            console.log("inside stored comment statement")
+            console.log(storedComment);
+            commentDisplay.innerText = `${storedComment}`;
+        }
+        //console.log('comment display inner text', commentDisplay.innerText)
+
+
+        localStorage.setItem("commentValue", commentInput.value )
         commentInput.value = '';
 
     })
 
 
 
+
+
+            let storedComment = localStorage.getItem("commentValue")
+            console.log('stored comment', storedComment)
+            // commentDisplay.innerText = `${storedComment}`
+            // commentDisplay.appendChild("storedComment")
 
 
 }
