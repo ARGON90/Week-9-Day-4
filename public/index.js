@@ -37,7 +37,7 @@ const catLoader = async () => {
     // appending cat img element to the mainContainer div
     mainContainer.appendChild(newCatImg);
 
-
+    const imgCat = localStorage.setItem("catImg",`${cats[0].url}`)
     // Phase 2
     // creation of new cat img button
     const catButton = document.createElement('button');
@@ -51,6 +51,7 @@ const catLoader = async () => {
     voteDiv.innerText = `Popularity Score: ${count}`;
     voteDiv.style.margin = '10px';
     mainContainer.appendChild(voteDiv);
+    const voteValue = localStorage.setItem("voteValue",`${count}`)
 
     // creation of comments display
     const commentDisplay = document.createElement('div');
@@ -61,11 +62,18 @@ const catLoader = async () => {
         const newCats = await newCatRes.json();
         newCatImg.setAttribute('src', `${newCats[0].url}`);
 
+        const storedImg = localStorage.getItem("catImg")
+        if(storedImg){
+            localStorage.setItem("catImg",`${newCats[0].url}`)
+        }
+
         // reset of count section
         count = 0;
         voteDiv.innerText = `Popularity Score: ${count}`;
         // reset of comment section
         commentDisplay.innerHTML = '';
+
+        //local storage for cat button
     });
 
 
@@ -97,6 +105,12 @@ const catLoader = async () => {
             count--;
             voteDiv.innerText = `Popularity Score: ${count}`;
         }
+
+        const voteValue = localStorage.getItem("voteValue")
+
+        if(voteValue){
+            localStorage.setItem("voteValue", `${count}`)
+        }
     });
 
     // creation of comment container div for holding input, submit buttons
@@ -115,7 +129,7 @@ const catLoader = async () => {
     commentContainerDiv.appendChild(submitButton);
 
     mainContainer.appendChild(commentContainerDiv);
-
+    const commentValue = localStorage.setItem("commentValue", "blank")
     // comment display styling
     commentDisplay.style.border = '1px solid black';
     commentDisplay.style.height = '500px';
@@ -134,8 +148,18 @@ const catLoader = async () => {
         newComment.innerText = commentInput.value;
         commentDisplay.appendChild(newComment);
         // reset of the comment input
+        const commentValue = localStorage.getItem("commentValue")
+        if(commentValue){
+            localStorage.setItem("commentValue", `${commentInput.value}`)
+        }
+
         commentInput.value = '';
+
     })
+
+
+
+
 
 }
 
